@@ -1,6 +1,12 @@
 # MSFarsi Scholarship
 
-## Provisoin Azure Container Registry to for app image
+## Contents
+
+- [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
+- [Download and build the web app](#download-and-build-the-web-app)
+
+
+## Provision Azure Container Registry (ACR) for hosting Docker images
 
 ```bash
 export SUB_ID=""
@@ -9,10 +15,16 @@ export ACR_NAME=""
 export LOCATION=""
 ```
 
-Login and set this subscription as a default one. _It is needed when you logged in azure-cli with multiple accounts_
+Log in to Azure:
 
 ```bash
 az login
+```
+
+Set this subscription as a default one.
+**It is needed when you logged-in with multiple accounts.**
+
+```bash
 az account --subscription $SUB_ID
 ```
 
@@ -22,7 +34,7 @@ Create a Azure Container Registry (ACR):
 az acr create --resource-group $RG --name $ACR_NAME --location $LOCATION --sku Basic
 ```
 
-## Download the project
+## Download and build the web app
 
 ```bash
 git clone git@github.com:navid-ahrary/group4-msfarsi.git`
