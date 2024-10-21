@@ -51,7 +51,7 @@ func main() {
 		// Make the HTTP request to the provided URL
 		resp, err := client.Head(fullURL)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"statusCode": 500, "message": err.Error()})
+			c.JSON(http.StatusForbidden, gin.H{"statusCode": 403, "message": err.Error()})
 			return
 		}
 		defer resp.Body.Close()
