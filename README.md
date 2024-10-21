@@ -5,8 +5,9 @@
 - [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
 - [Download and build the web app](#download-and-build-the-web-app)
 
-
 ## Provision Azure Container Registry (ACR) for hosting Docker images
+
+User you
 
 ```bash
 export SUB_ID=""
@@ -25,7 +26,7 @@ Set this subscription as a default one.
 **It is needed when you logged-in with multiple accounts.**
 
 ```bash
-az account --subscription $SUB_ID
+az account set --subscription $SUB_ID
 ```
 
 Create a Azure Container Registry (ACR):
