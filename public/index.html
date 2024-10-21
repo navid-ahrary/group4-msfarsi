@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MSFarsi Group#4 URL Request App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      margin: 10px 0;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px; /* Space between button and spinner */
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #ccc; /* Style for disabled button */
+      cursor: not-allowed; /* Change cursor to indicate disabled state */
+    }
+
+    pre {
+      background: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 600px;
+      margin-top: 20px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Loading spinner styles */
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: #007BFF;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: none; /* Hidden by default */
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Show loading spinner */
+    .loading .spinner {
+      display: block;
+    }
+
+    /* Green text for success */
+    .success {
+      color: green;
+    }
+
+    /* Red text for error */
+    .error {
+      color: red;
+    }
+  </style>
+  <script>
+    async function sendRequest() {
+      const url = document.getElementById('urlInput').value;
+      const resultElement = document.getElementById('result');
+      const spinner = document.getElementById('spinner');
+      const button = document.querySelector('button');
+
+      // Clear previous results and styles
+      resultElement.innerText = '';
+      resultElement.className = '';
+
+      // Show loading spinner and disable the button
+      spinner.style.display = 'inline-block';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/request', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: url }),
+        });
+
+        const result = await response.json();
+
+        // Apply color based on status code
+        if (result.statusCode === 200) {
+          resultElement.classList.add('success');
+          resultElement.innerText = `Status Code: ${result.statusCode} (Success)`;
+        } else {
+          resultElement.classList.add('error');
+          resultElement.innerText = `Status Code: ${result.statusCode} (Error)`;
+        }
+      } catch (error) {
+        resultElement.classList.add('error');
+        resultElement.innerText = `Error: ${error}`;
+      } finally {
+        // Hide loading spinner and enable the button
+        spinner.style.display = 'none';
+        button.disabled = false;
+      }
+    }
+
+    document.getElementById('urlInput').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        sendRequest(); // Call the sendRequest function
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>MSFarsi Group#4 URL Request App</h1>
+  <input type="text" id="urlInput" placeholder="Enter URL or IP" />
+
+  <!-- Container for button and spinner -->
+  <div class="button-container">
+    <button onclick="sendRequest()">Send Request</button>
+    <!-- Loading spinner -->
+    <div id="spinner" class="spinner"></div>
+  </div>
+
+  <!-- Response result -->
+  <pre id="result"></pre>
+</body>
+</html>
