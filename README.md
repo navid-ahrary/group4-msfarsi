@@ -15,13 +15,13 @@ az login
 
 ```bash
 export RG="YOUR_RESOURCE_GROUP_NAME" # Replace with your resource group name
-export SUB_ID=$(az account show --query id --output tsv)
+export SUB_ID="YOUR_SUBSCRIPTION_ID" # Replace with your current subscription id
 export LOCATION="swedencentral"
-export ACR_NAME="acrswcdev$RANDOM"
+export ACR_NAME="acrswcdev$RANDOM" ## Must be unique universally
 ```
 
-Set this subscription as a default one.
-**It is needed when you logged-in with multiple accounts.**
+Set this subscription as a default one for the rest of commands.
+**It is necessary when you logged-in azure cli with multiple accounts.**
 
 ```bash
 az account set --subscription $SUB_ID
