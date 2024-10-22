@@ -1,5 +1,7 @@
 # MSFarsi Scholarship
 
+This project is part of scenario which is assigned to our group in MSFarsi Scholarship 1 - 2024.
+
 ## Contents
 
 - [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
@@ -40,7 +42,7 @@ Build a docker image from web app and pull to ACR in order to use in Azure Kuber
 Clone the project:
 
 ```bash
-git clone git@github.com:navid-ahrary/group4-msfarsi.git`
+git clone git@github.com:navid-ahrary/group4-msfarsi.git
 cd group4-msfarsi/web-app
 ```
 
