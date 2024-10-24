@@ -39,15 +39,8 @@ az acr create --resource-group $RG --name $ACR_NAME --location $LOCATION --sku B
 
 Build a docker image from web app and pull to ACR in order to use in Azure Kuberenets Service (AKS).
 
-Clone the project:
-
-```bash
-git clone git@github.com:navid-ahrary/group4-msfarsi.git
-cd group4-msfarsi/web-app
-```
-
 Build the docker image and pull to the ACR:
 
 ```bash
-az acr build -t msfarsi/group4-app:v1 --registry $ARC_NAME .
+az acr build -t msfarsi/group4-app:v1 --registry $ARC_NAME https://github.com/navid-ahrary/group4-msfarsi.git\#:web-app/
 ```
