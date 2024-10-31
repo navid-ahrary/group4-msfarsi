@@ -16,17 +16,35 @@
       height: 100vh;
     }
 
+    img {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
     h1 {
       color: #333;
     }
 
-    input[type="text"] {
+    .input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    select, input[type="text"] {
       padding: 10px;
-      margin: 10px 0;
-      width: 300px;
+      margin: 10px 5px;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 16px;
+    }
+
+    select {
+      width: 100px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      width: 300px;
     }
 
     .button-container {
@@ -42,7 +60,7 @@
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
-      margin-right: 10px; /* Space between button and spinner */
+      margin-right: 10px;
     }
 
     button:hover {
@@ -50,8 +68,8 @@
     }
 
     button:disabled {
-      background-color: #ccc; /* Style for disabled button */
-      cursor: not-allowed; /* Change cursor to indicate disabled state */
+      background-color: #ccc;
+      cursor: not-allowed;
     }
 
     pre {
@@ -67,7 +85,6 @@
       word-wrap: break-word;
     }
 
-    /* Loading spinner styles */
     .spinner {
       border: 4px solid rgba(0, 0, 0, 0.1);
       border-left-color: #007BFF;
@@ -75,7 +92,7 @@
       width: 30px;
       height: 30px;
       animation: spin 1s linear infinite;
-      display: none; /* Hidden by default */
+      display: none;
     }
 
     @keyframes spin {
@@ -83,33 +100,28 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Show loading spinner */
     .loading .spinner {
       display: block;
     }
 
-    /* Green text for success */
     .success {
       color: green;
     }
 
-    /* Red text for error */
     .error {
       color: red;
     }
   </style>
   <script>
     async function sendRequest() {
+      const protocol = document.getElementById('protocolSelect').value;
       const url = document.getElementById('urlInput').value;
       const resultElement = document.getElementById('result');
       const spinner = document.getElementById('spinner');
       const button = document.querySelector('button');
 
-      // Clear previous results and styles
       resultElement.innerText = '';
       resultElement.className = '';
-
-      // Show loading spinner and disable the button
       spinner.style.display = 'inline-block';
       button.disabled = true;
 
@@ -119,12 +131,11 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ url: url }),
+          body: JSON.stringify({ protocol, url }),
         });
 
         const result = await response.json();
-
-        // Apply color based on status code
+        
         if (result.statusCode === 200) {
           resultElement.classList.add('success');
           resultElement.innerText = `Status Code: ${result.statusCode} (Success)`;
@@ -136,7 +147,6 @@
         resultElement.classList.add('error');
         resultElement.innerText = `Error: ${error}`;
       } finally {
-        // Hide loading spinner and enable the button
         spinner.style.display = 'none';
         button.disabled = false;
       }
@@ -144,24 +154,30 @@
 
     document.getElementById('urlInput').addEventListener('keypress', function(event) {
       if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission
-        sendRequest(); // Call the sendRequest function
+        event.preventDefault();
+        sendRequest();
       }
     });
   </script>
 </head>
 <body>
+  <img src="https://msfarsi.com/wp-content/uploads/2024/04/MSFarsi-New-Logo-WHITE-BGjpg.jpg" alt="MSFarsi Logo">
   <h1>MSFarsi Group#4 URL Request App</h1>
-  <input type="text" id="urlInput" placeholder="Enter URL or IP" />
-
-  <!-- Container for button and spinner -->
+  <div class="input-container">
+    <select id="protocolSelect">
+      <option value="http">HTTP</option>
+      <option value="https">HTTPS</option>
+      <option value="ftp">FTP</option>
+      <option value="icmp">ICMP</option>
+      <option value="udp">UDP</option>
+      <option value="tcp">TCP</option>
+    </select>
+    <input type="text" id="urlInput" placeholder="Enter URL or IP" />
+  </div>
   <div class="button-container">
     <button onclick="sendRequest()">Send Request</button>
-    <!-- Loading spinner -->
     <div id="spinner" class="spinner"></div>
   </div>
-
-  <!-- Response result -->
   <pre id="result"></pre>
 </body>
 </html>

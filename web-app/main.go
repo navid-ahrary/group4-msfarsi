@@ -2,11 +2,19 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-ping/ping"
 )
+
+type RequestBody struct {
+	URL      string `json:"url"`
+	Protocol string `json:"protocol"`
+}
 
 func main() {
 	r := gin.Default()
@@ -16,14 +24,12 @@ func main() {
 
 	// Serve index.html when accessing the root URL
 	r.GET("/", func(c *gin.Context) {
-		c.File("./public/index.html") // Make sure index.html is in the public directory
+		c.File("./public/index.html")
 	})
 
 	// POST /request API endpoint
 	r.POST("/request", func(c *gin.Context) {
-		var requestBody struct {
-			URL string `json:"url"`
-		}
+		var requestBody RequestBody
 
 		// Bind JSON request body to struct
 		if err := c.ShouldBindJSON(&requestBody); err != nil {
@@ -33,30 +39,30 @@ func main() {
 
 		// Validate that the URL or IP address is provided
 		url := requestBody.URL
-		if url == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"statusCode": 400, "message": "URL or IP address is required"})
+		protocol := strings.ToLower(requestBody.Protocol)
+		if url == "" || protocol == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"statusCode": 400, "message": "URL and protocol are required"})
 			return
 		}
 
-		// Prepend "https://" if the input is not already a valid URL
-		fullURL := url
-		if !isValidURL(url) {
-			fullURL = "https://" + url
+		// Handle requests based on the protocol
+		var statusCode int
+		var err error
+		switch protocol {
+		case "icmp":
+			statusCode, err = checkICMP(url)
+		case "http", "https", "ftp", "udp", "tcp":
+			statusCode, err = checkHTTP(url, protocol)
+		default:
+			c.JSON(http.StatusBadRequest, gin.H{"statusCode": 400, "message": "Unsupported protocol"})
+			return
 		}
 
-		client := http.Client{
-			Timeout: 5 * time.Second, // Set timeout
-		}
-
-		// Make the HTTP request to the provided URL
-		resp, err := client.Head(fullURL)
 		if err != nil {
-			c.JSON(http.StatusForbidden, gin.H{"statusCode": 403, "message": err.Error()})
-			return
+			c.JSON(http.StatusForbidden, gin.H{"statusCode": statusCode, "message": err.Error()})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"statusCode": statusCode, "message": "Success"})
 		}
-		defer resp.Body.Close()
-
-		c.JSON(http.StatusOK, gin.H{"statusCode": resp.StatusCode})
 	})
 
 	// Start the server
@@ -65,7 +71,38 @@ func main() {
 	}
 }
 
-// isValidURL checks if a string is a valid URL
-func isValidURL(url string) bool {
-	return len(url) > 0 && (url[:4] == "http" || url[:5] == "https")
+// checkHTTP sends an HTTP/HTTPS/FTP/URD/TCP request to the specified URL
+func checkHTTP(url, protocol string) (int, error) {
+	fullURL := url
+	if !strings.HasPrefix(url, "http") && protocol != "tcp" {
+		fullURL = protocol + "://" + url
+	}
+
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+	resp, err := client.Head(fullURL)
+	if err != nil {
+		return http.StatusForbidden, err
+	}
+	defer resp.Body.Close()
+
+	return resp.StatusCode, nil
+}
+
+// checkICMP performs a ping to check ICMP reachability
+func checkICMP(url string) (int, error) {
+	pinger, err := ping.NewPinger(url)
+	if err != nil {
+		return http.StatusForbidden, fmt.Errorf("ICMP error: %v", err)
+	}
+	pinger.Count = 3
+	pinger.Timeout = 5 * time.Second
+
+	err = pinger.Run()
+	if err != nil || pinger.Statistics().PacketsRecv == 0 {
+		return http.StatusForbidden, fmt.Errorf("host not reachable via ICMP")
+	}
+
+	return http.StatusOK, nil
 }
