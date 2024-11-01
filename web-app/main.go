@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-ping/ping"
+	"github.com/go-resty/resty/v2"
 )
 
 type RequestBody struct {
@@ -51,8 +52,8 @@ func main() {
 		switch protocol {
 		case "icmp":
 			statusCode, err = checkICMP(url)
-		case "http", "https", "udp", "tcp":
-			statusCode, err = checkHTTP(url, protocol)
+		case "http", "https":
+			statusCode, err = checkHTTPWithResty(url, protocol)
 		default:
 			c.JSON(http.StatusBadRequest, gin.H{"statusCode": 400, "message": "Unsupported protocol"})
 			return
@@ -71,25 +72,20 @@ func main() {
 	}
 }
 
-// checkHTTP sends an HTTP/HTTPS/FTP/URD/TCP request to the specified URL
-func checkHTTP(url, protocol string) (int, error) {
+// checkHTTPWithResty sends an HTTP/HTTPS request to the specified URL using resty
+func checkHTTPWithResty(url, protocol string) (int, error) {
 	fullURL := url
-	if !strings.HasPrefix(url, "http") && protocol != "tcp" {
+	if !strings.HasPrefix(url, "http") {
 		fullURL = protocol + "://" + url
 	}
-	client := http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Get(fullURL)
+	client := resty.New().SetTimeout(5 * time.Second)
+
+	resp, err := client.R().Head(fullURL)
 	if err != nil {
 		return http.StatusForbidden, err
 	}
-	defer resp.Body.Close()
 
-	// Check for 4XX status codes
-	if resp.StatusCode >= 400 && resp.StatusCode < 500 {
-		return resp.StatusCode, fmt.Errorf("client error: %s", resp.Status)
-	}
-
-	return resp.StatusCode, nil
+	return resp.StatusCode(), nil
 }
 
 // checkICMP performs a ping to check ICMP reachability
