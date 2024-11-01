@@ -77,15 +77,17 @@ func checkHTTP(url, protocol string) (int, error) {
 	if !strings.HasPrefix(url, "http") && protocol != "tcp" {
 		fullURL = protocol + "://" + url
 	}
-
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
-	resp, err := client.Head(fullURL)
+	client := http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get(fullURL)
 	if err != nil {
-		return resp.StatusCode, err
+		return http.StatusForbidden, err
 	}
 	defer resp.Body.Close()
+
+	// Check for 4XX status codes
+	if resp.StatusCode >= 400 && resp.StatusCode < 500 {
+		return resp.StatusCode, fmt.Errorf("client error: %s", resp.Status)
+	}
 
 	return resp.StatusCode, nil
 }
