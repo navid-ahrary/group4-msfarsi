@@ -51,7 +51,7 @@ func main() {
 		switch protocol {
 		case "icmp":
 			statusCode, err = checkICMP(url)
-		case "http", "https", "ftp", "udp", "tcp":
+		case "http", "https", "udp", "tcp":
 			statusCode, err = checkHTTP(url, protocol)
 		default:
 			c.JSON(http.StatusBadRequest, gin.H{"statusCode": 400, "message": "Unsupported protocol"})
@@ -83,7 +83,7 @@ func checkHTTP(url, protocol string) (int, error) {
 	}
 	resp, err := client.Head(fullURL)
 	if err != nil {
-		return http.StatusForbidden, err
+		return resp.StatusCode, err
 	}
 	defer resp.Body.Close()
 
