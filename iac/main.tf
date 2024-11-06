@@ -44,6 +44,7 @@ module "routeTable" {
   rgName            = var.rgName
   routeTableName    = var.routeTableName
   vnetAddressSpaces = module.vnet.vnetAddressSpace
+  fwpip             = module.firewall.fwpip
 
   depends_on = [module.aks, module.firewall]
 }

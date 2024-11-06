@@ -79,8 +79,14 @@ resource "azurerm_firewall_application_rule_collection" "appRuleCollection" {
       "management.azure.com",            # Required for Kubernetes operations against the Azure API.
       "login.microsoftonline.com",       # Required for Microsoft Entra authentication.
       "packages.microsoft.com",          # This address is the Microsoft packages repository used for cached apt-get operations
-      "acs-mirror.azureedge.net"         # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
+      "acs-mirror.azureedge.net",        # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
+      "docker.io",                       # This address is for pulling docker image from Docker repository
+      "registry-1.docker.io",            # This address is for pulling docker image from Docker repository
+      "production.cloudflare.docker.com" # This address is for pulling docker image from Docker repository
     ]
   }
-
 }
+
+# data "azurerm_monitor_diagnostic_categories" "fw" {
+#   resource_id = ""
+# }

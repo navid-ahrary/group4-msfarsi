@@ -11,7 +11,7 @@ resource "azurerm_subnet_route_table_association" "rtAksSubnetAssociation" {
   subnet_id      = var.aksSubnetId
 }
 
-resource "azurerm_route" "vnetRoute" {
+resource "azurerm_route" "routeVnet" {
   name                = "route-vnet"
   route_table_name    = azurerm_route_table.rt.name
   address_prefix      = join(",", var.vnetAddressSpaces)
@@ -20,10 +20,10 @@ resource "azurerm_route" "vnetRoute" {
 }
 
 
-# resource "azurerm_route" "allRoute" {
-#   name                = "route-vnet"
-#   address_prefix      = ""
-#   resource_group_name = var.rgName
-#   route_table_name    = azurerm_route_table.rt.name
-#   next_hop_type       = ""
-# }
+resource "azurerm_route" "routeInternet" {
+  name                = "route-intenet"
+  address_prefix      = "${var.fwpip}/32"
+  resource_group_name = var.rgName
+  route_table_name    = azurerm_route_table.rt.name
+  next_hop_type       = "Internet"
+}

@@ -33,3 +33,8 @@ variable "routeTableName" {
   type        = string
   description = "Route table name"
 }
+
+variable "fwpip" {
+  type        = string
+  description = "Firewall public IP"
+}
