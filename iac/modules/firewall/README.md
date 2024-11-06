@@ -7,17 +7,17 @@
 
 ## Network Rules
 
-Create a network rule to __Allow__ these FQDN Address:
+Create a network rule collection and __Allow__ these FQDN Address:
 
 | Protocol | Destination FQDN Address | Destination Ports | Description |
 |----------|----------------------|-------------------|-------------|
-| TCP      | `<cluster-api-server-address>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server      |
-| UDP      | `<cluster-api-server-address>` | `1194`             | Interaction between AKS node and Cluster API Server      |
+| TCP      | `<cluster-api-server-address>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server.      |
+| UDP      | `<cluster-api-server-address>` | `1194`             | Interaction between AKS node and Cluster API Server.      |
 | TCP       | _ServiceTag_ `AzureMonitor` | `443` | This endpoint is used to send metrics data and logs to Azure Monitor and Log Analytics. |
 
 ## Application Rules
 
-__Allow__ `Https` to this destination.
+Create an application collection rule and __Allow__ `Https` to this destination.
 
 | Destination FQDN Address         |Description                   |
 |----------------------------------|------------------------------|
@@ -25,9 +25,7 @@ __Allow__ `Https` to this destination.
 | `management.azure.com`                | Required for Kubernetes operations against the Azure API. |
 | `login.microsoftonline.com`           | Required for Microsoft Entra authentication. |
 | `acs-mirror.azureedge.net`            | Repository required to download and install binaries like kubenet and Azure CNI. |
-| `docker.io`                           | For pulling Docker images from the Docker repository. |
-| `registry-1.docker.io`                | For pulling Docker images from the Docker repository. |
-| `production.cloudflare.docker.com`    | For pulling Docker images from the Docker repository. |
+| `docker.io`, `production.cloudflare.docker.com`, `registry-1.docker.io`   | For pulling Docker images from the Docker repository. |
 | `packages.microsoft.com`              | Microsoft packages repository used for cached apt-get operations. |
 | `dc.services.visualstudio.com`            | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
 | `*.ods.opinsights.azure.com`            | This endpoint is used by Azure Monitor for ingesting log analytics data. |
