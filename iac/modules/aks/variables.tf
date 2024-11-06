@@ -58,7 +58,7 @@ variable "dnsServiceIP" {
 variable "serviceCidr" {
   type        = string
   description = "The service CIDR"
-  default     = "192.168.4.0/24"
+  default     = "10.244.0.0/16"
 }
 
 variable "loadbalancerSku" {
