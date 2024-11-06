@@ -11,8 +11,8 @@ Create a network rule to __Allow__ these FQDN:
 
 | Protocol | Destination Addresses  | Destination Ports | Description                                              |
 |----------|------------------------|-------------------|----------------------------------------------------------|
-| TCP      | `<API Server Address>` | 9000, 443        | Interaction between AKS node and Cluster API Server      |
-| UDP      | `<API Server Address>` | 1194             | Interaction between AKS node and Cluster API Server      |
+| TCP      | `<cluster-api-server-address>` | 9000, 443        | Interaction between AKS node and Cluster API Server      |
+| UDP      | `<cluster-api-server-address>` | 1194             | Interaction between AKS node and Cluster API Server      |
 | TCP       | _ServiceTag_ `AzureMonitor:443` | 443 | This endpoint is used to send metrics data and logs to Azure Monitor and Log Analytics. |
 
 ## Application Rules
