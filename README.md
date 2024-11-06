@@ -2,7 +2,7 @@
 
 ## Contents
 
-- [Solution  Diagram](#solution-diagram)
+- [Solution Diagram](#solution-diagram)
 - [Scenario](#scenario)
 - [Web App](#web-app)
   - [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
@@ -10,7 +10,7 @@
 
 ### Solution Diagram
 
-!["diagram"](./assets/solution-arch.webp)
+!["diagram"](./assets/solution-diagram.webp)
 
 ### Scenario
 
