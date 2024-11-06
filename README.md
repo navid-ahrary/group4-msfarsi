@@ -2,13 +2,13 @@
 
 ## Contents
 
-- [Solution Architecture Diagram](#solution-architecture-diagram)
+- [Solution  Diagram](#solution-diagram)
 - [Scenario](#scenario)
 - [Web App](#web-app)
-- [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
-- [Pull the web app docker image to ACR](#pull-the-web-app-docker-image-to-acr)
+  - [Provision Azure Container Registry (ACR) service](#provision-azure-container-registry-acr-for-hosting-docker-images)
+  - [Pull the web app docker image to ACR](#pull-the-web-app-docker-image-to-acr)
 
-### Solution Architecture Diagram
+### Solution Diagram
 
 !["diagram"](./assets/solution-arch.webp)
 
