@@ -7,6 +7,8 @@
 
 ## Network Rules
 
+Create a network rule to __Allow__ these FQDN:
+
 | Protocol | Destination Addresses  | Destination Ports | Description                                              |
 |----------|------------------------|-------------------|----------------------------------------------------------|
 | TCP      | `<API Server Address>` | 9000, 443        | Interaction between AKS node and Cluster API Server      |
@@ -15,7 +17,7 @@
 
 ## Application Rules
 
-Allow `Https` to this destination addresses.
+__Allow__ `Https` to this destination addresses.
 
 | Destination Address                   | Description                                                                                     |
 |---------------------------------------|-------------------------------------------------------------------------------------------------|
