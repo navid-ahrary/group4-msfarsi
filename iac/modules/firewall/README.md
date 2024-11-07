@@ -33,3 +33,7 @@ Create an application collection rule and __Allow__ `Https` to this destination.
 | `*.monitoring.azure.com`                | This endpoint is used to send metrics data to Azure Monitor. |
 | `<cluster-region-name>.ingest.monitor.azure.com` | This endpoint is used by Azure Monitor managed service for Prometheus metrics ingestion. |
 | `<cluster-region-name>.handler.control.monitor.azure.com`  | This endpoint is used to fetch data collection rules for a specific cluster. |
+| `mcr.microsoft.com`           | Required to access images in Microsoft Container Registry (MCR)       |
+| `dc.services.visualstudio.com`                           | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
+| `*.blob.storage.azure.net` | This dependency is due to some internal mechanisms of Azure Managed Disks.   |
+| `*.blob.core.windows.net` | This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. |

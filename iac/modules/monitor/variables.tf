@@ -18,8 +18,7 @@ variable "logName" {
   description = "Log Workspace name"
 }
 
-variable "skuTier" {
+variable "fwId" {
   type        = string
-  description = "Log Workspace SKU"
-  default     = "PerGB2028"
+  description = "Firewall service id to enable diagnostic settings"
 }

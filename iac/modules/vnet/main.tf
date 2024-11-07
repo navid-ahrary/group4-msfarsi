@@ -25,3 +25,8 @@ resource "azurerm_subnet" "aksSubnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.aksSubnetAddressPrefixes
 }
+
+resource "azurerm_virtual_network_dns_servers" "vnetDnsServers" {
+  virtual_network_id = azurerm_virtual_network.vnet.id
+  dns_servers        = [var.firewallPrivateIP]
+}

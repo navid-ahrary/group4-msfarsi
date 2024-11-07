@@ -5,12 +5,12 @@ variable "rgName" {
 
 variable "location" {
   type        = string
-  description = "Resource group location"
+  description = "Azure Firewall location"
 }
 
 variable "commonTags" {
   type        = map(string)
-  description = "Resource group tags"
+  description = "Azure Firewall tags"
 }
 
 variable "fwName" {
@@ -40,7 +40,3 @@ variable "aksSubnetAddressPrefixes" {
   description = "AKS subnet address prefixes"
 }
 
-variable "aksApiServerAddress" {
-  type        = string
-  description = "AKS API server address"
-}

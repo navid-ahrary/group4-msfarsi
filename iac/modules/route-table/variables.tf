@@ -18,10 +18,10 @@ variable "vnetAddressSpaces" {
   description = "VNet address spaces that route table reacts to its traffic"
 }
 
-variable "vnetNextHopeType" {
+variable "vaNextHopeType" {
   type        = string
-  description = "vnet type as next hope"
-  default     = "VnetLocal"
+  description = "Virtual Appliance type as next hope"
+  default     = "VirtualAppliance" # "VirtualNetworkGateway" "VnetLocal" "Internet" "VirtualAppliance" "None"
 }
 
 variable "aksSubnetId" {
@@ -32,6 +32,11 @@ variable "aksSubnetId" {
 variable "routeTableName" {
   type        = string
   description = "Route table name"
+}
+
+variable "fwPrivateIp" {
+  type        = string
+  description = "Firewall private IP in vnet"
 }
 
 variable "fwpip" {

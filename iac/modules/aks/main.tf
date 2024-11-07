@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size              = var.nodeVmSize
 
     node_public_ip_enabled = false
-    os_sku                 = "AzureLinux"
+    os_sku                 = "AzureLinux" # options: "AzureLinux", "Ubuntu"
     vnet_subnet_id         = var.aksSubnetId
 
     upgrade_settings {
@@ -35,17 +35,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   dns_prefix = "${var.aksName}-dns"
   network_profile {
-    load_balancer_sku   = var.loadbalancerSku
-    network_plugin      = var.plugin
-    network_plugin_mode = var.pluginMode
-    service_cidr        = var.serviceCidr
-    dns_service_ip      = var.dnsServiceIP
-    pod_cidr            = var.podCIDR
-    network_policy      = var.networkPolicy
+    network_plugin      = "azure"
+    network_plugin_mode = "overlay"
+    service_cidr        = "192.168.0.0/24" # 256 available IPs, Must not overlap with any subnet ranges in the vnet
+    dns_service_ip      = "192.168.0.10"
+    network_policy      = "azure" # Options: "calico" "azure" "cilium" (Calico is available with Azure CNI)
   }
 
   identity {
     type = "SystemAssigned"
+
   }
 
   api_server_access_profile {
@@ -53,3 +52,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
+resource "azurerm_role_assignment" "networkContributorAks" {
+  scope                = var.aksSubnetId
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+}

@@ -15,7 +15,7 @@ variable "commonTags" {
   description = "Resource group tags"
   default = {
     Department  = "IT"
-    Environemnt = "demo"
+    Environment = "demo"
   }
 }
 
@@ -49,9 +49,20 @@ variable "aksNodeVmSize" {
   default     = "Standard_D2s_v3"
 }
 
-
 variable "firewallName" {
   type        = string
   description = "Azure Firewall name"
   default     = "fw-egress"
+}
+
+variable "logName" {
+  type        = string
+  description = "Log Analytic Workspace name"
+  default     = "log-egress"
+}
+
+variable "authorizedIpRanges" {
+  type        = list(string)
+  description = "Authorized IPs to access AKS API server"
+  default     = ["20.216.218.128/32"]
 }

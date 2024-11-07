@@ -11,12 +11,13 @@ resource "azurerm_subnet_route_table_association" "rtAksSubnetAssociation" {
   subnet_id      = var.aksSubnetId
 }
 
-resource "azurerm_route" "routeVnet" {
-  name                = "route-vnet"
-  route_table_name    = azurerm_route_table.rt.name
-  address_prefix      = join(",", var.vnetAddressSpaces)
-  resource_group_name = var.rgName
-  next_hop_type       = var.vnetNextHopeType
+resource "azurerm_route" "routeFw" {
+  name                   = "route-fw"
+  route_table_name       = azurerm_route_table.rt.name
+  address_prefix         = "0.0.0.0/0"
+  resource_group_name    = var.rgName
+  next_hop_type          = var.vaNextHopeType
+  next_hop_in_ip_address = var.fwPrivateIp
 }
 
 

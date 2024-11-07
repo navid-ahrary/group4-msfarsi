@@ -2,6 +2,7 @@ locals {
   fwPIP                           = "${var.fwName}-pip"
   fwNetworkRuleCollectionName     = "${var.fwName}-NetRuleCollection"
   fwApplicationRuleCollectionName = "${var.fwName}-AppRuleCollection"
+  fwDnatRuleCollectionName        = "${var.fwName}-dnatRuleCollection"
 }
 
 resource "azurerm_public_ip" "fwPIP" {
@@ -36,19 +37,19 @@ resource "azurerm_firewall_network_rule_collection" "netRuleCollection" {
   priority            = 100
 
   rule {
-    name              = "allow-akstcp"
-    protocols         = ["TCP"]
-    source_addresses  = var.aksSubnetAddressPrefixes
-    destination_fqdns = [var.aksApiServerAddress]
-    destination_ports = ["9000", "443"]
+    name                  = "allow-akstcp"
+    protocols             = ["TCP"]
+    source_addresses      = var.aksSubnetAddressPrefixes
+    destination_addresses = ["AzureCloud.${var.location}"]
+    destination_ports     = ["9000"]
   }
 
   rule {
-    name              = "allow-aksudp"
-    protocols         = ["UDP"]
-    source_addresses  = var.aksSubnetAddressPrefixes
-    destination_fqdns = [var.aksApiServerAddress]
-    destination_ports = ["1194"]
+    name                  = "allow-aksudp"
+    protocols             = ["UDP"]
+    source_addresses      = var.aksSubnetAddressPrefixes
+    destination_addresses = ["AzureCloud.${var.location}"]
+    destination_ports     = ["1194"]
   }
 
   rule {
@@ -68,6 +69,18 @@ resource "azurerm_firewall_application_rule_collection" "appRuleCollection" {
   priority            = 100
 
   rule {
+    name             = "allow-google"
+    source_addresses = var.aksSubnetAddressPrefixes
+
+    protocol {
+      type = "Https"
+      port = 448
+    }
+
+    target_fqdns = ["google.com"]
+  }
+
+  rule {
     name             = "allow-aksmicrosoft"
     source_addresses = var.aksSubnetAddressPrefixes
     protocol {
@@ -75,18 +88,42 @@ resource "azurerm_firewall_application_rule_collection" "appRuleCollection" {
       type = "Https"
     }
     target_fqdns = [
-      "*.hcp.${var.location}.azmk8s.io", # Required for Node <-> API server communication.
-      "management.azure.com",            # Required for Kubernetes operations against the Azure API.
-      "login.microsoftonline.com",       # Required for Microsoft Entra authentication.
-      "packages.microsoft.com",          # This address is the Microsoft packages repository used for cached apt-get operations
-      "acs-mirror.azureedge.net",        # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
-      "docker.io",                       # This address is for pulling docker image from Docker repository
-      "registry-1.docker.io",            # This address is for pulling docker image from Docker repository
-      "production.cloudflare.docker.com" # This address is for pulling docker image from Docker repository
+      "*.hcp.${var.location}.azmk8s.io",  # Required for Node <-> API server communication.
+      "management.azure.com",             # Required for Kubernetes operations against the Azure API.
+      "login.microsoftonline.com",        # Required for Microsoft Entra authentication.
+      "packages.microsoft.com",           # This address is the Microsoft packages repository used for cached apt-get operations
+      "acs-mirror.azureedge.net",         # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
+      "*docker.io",                       # This address is for authentication to docker hub and pulling image from Docker repository
+      "registry-1.docker.io",             # This address is for pulling docker image from Docker repository
+      "production.cloudflare.docker.com", # This address is for pulling docker image from Docker repository
+      "mcr.microsoft.com",                # Required to access images in Microsoft Container Registry (MCR)
+      "dc.services.visualstudio.com",     # This endpoint is used by Azure Monitor for Containers Agent Telemetry.
+      "*.blob.storage.azure.net",         # This dependency is due to some internal mechanisms of Azure Managed Disks
+      "*.blob.core.windows.net",          # This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions.
     ]
+  }
+
+  rule {
+    name             = "allow-akstags"
+    source_addresses = var.aksSubnetAddressPrefixes
+    fqdn_tags        = ["AzureKubernetesService"]
   }
 }
 
-# data "azurerm_monitor_diagnostic_categories" "fw" {
-#   resource_id = ""
-# }
+
+resource "azurerm_firewall_nat_rule_collection" "natRuleCollection" {
+  name                = local.fwDnatRuleCollectionName
+  azure_firewall_name = azurerm_firewall.fw.name
+  resource_group_name = var.rgName
+  action              = "Dnat"
+  priority            = 110
+  rule {
+    name                  = "allow-nataksilb"
+    destination_addresses = [azurerm_public_ip.fwPIP.ip_address]
+    destination_ports     = ["80"]
+    source_addresses      = ["*"]
+    translated_address    = "10.0.0.20"
+    translated_port       = 80
+    protocols             = ["TCP"]
+  }
+}

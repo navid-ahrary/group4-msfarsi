@@ -41,3 +41,8 @@ variable "aksSubnetAddressPrefixes" {
   description = "AKS subnet prefix ip"
   default     = ["10.0.0.0/24"] # 10.0.0.0 - 10.0.0.255 : 256 ip addresses
 }
+
+variable "firewallPrivateIP" {
+  type    = string
+  default = "Firewall Private IP in this vnet"
+}
