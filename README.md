@@ -10,13 +10,13 @@
 
 ### Solution Diagram
 
-!["diagram"](./assets/solution-diagram.webp)
+<!-- !["diagram"](./assets/solution-diagram.webp) -->
 
 ### Scenario
 
 _**Azure Docker and Kubernetes Scenario**_
 
-Scenario Overview: A company, TechStream Solutions, is modernizing its application infrastructure by containerizing its applications and deploying them using Azure Kubernetes Service (AKS). The company aims to leverage the scalability and flexibility of Kubernetes, while ensuring that all outbound traffic from the application environment is securely controlled using Azure Firewall.
+**Scenario Overview:** A company, TechStream Solutions, is modernizing its application infrastructure by containerizing its applications and deploying them using Azure Kubernetes Service (AKS). The company aims to leverage the scalability and flexibility of Kubernetes, while ensuring that all outbound traffic from the application environment is securely controlled using Azure Firewall.
 
 As an Azure Administrator, your task is to design and demonstrate a containerized application deployment using Azure Docker and AKS, while ensuring that outbound traffic is routed through Azure Firewall for secure and controlled communication.
 
