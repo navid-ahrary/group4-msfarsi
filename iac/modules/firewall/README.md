@@ -6,9 +6,16 @@ Needed Firewall Policy rules for our scenario in order to AKS works well.
 
 - [NAT Policy Rule Collection Group](#nat-policy-rule-collection-group)
   - [Nat Rule Collection](#nat-rule-collection)
-    - [Rules](#rules)
-- [Application Rule Collection Group for allow](#application-rule-collection-group-for-allow)
-- [Application Rule Collection Group for deny](#application-rule-collection-for-deny)
+- [Application Rule Collection Groups](#application-rule-collection-groups)
+  - [Allow Application Rule Collections](#allow-application-rule-collections)
+    - [Application Allow Rules](#application-allow-rules)
+      - [Allow access to Microsoft services](#allow-access-to-microsoft-services)
+      - [Allow HTTP access to AKS nodes patch update](#allow-http-access-to-aks-nodes-patch-update)
+      - [Allow HTTPS access to AKS nodes patch update](#allow-https-access-to-aks-nodes-patch-update)
+      - [Allow access to Docker Hub](#allow-access-to-docker-hub)
+      - [Allow access to Github](#allow-access-to-github)
+      -[Allow access to `*microsoft.com`](#allow-access-to-microsoftcom)
+  - [Deny Application Rule Collections](#deny-application-rule-collections)
 
 ## NAT Policy Rule Collection Group
 
@@ -22,13 +29,13 @@ Priority: `200`
 |------------------------------------|---------|------------|
 | `dnat`                             |  `dnat`  | `200`       |
 
-### Rules
+### DNAT Rules
 
 | Rule name | protocols | source_addresses | destination_address  | destination_ports | translated_address | translated_port |
 |----------|---------------|----------|--------|-----------|------------|------------|
 | `nat-aks-ilb`  | `TCP`, `UDP`  | `*`  | `<fw-public-ip>` | `<fw-public-port>` | `<aks-ilb-private-ip>`   | `aks-ilb-port`  |
 
-## Application Rule Collection Group for allow
+## Application Rule Collection Groups
 
 Create an application rules collection group to control egress traffic from vnet. It includes two `application_rule_collection`s.
 
@@ -108,7 +115,7 @@ Port: `443`
 | `ghcr.io`                          | For pulling from the Github repository. |
 | `pkg-containers.githubusercontent.com` | For pulling from the Github repository. |
 
-##### Allow access to all subdomains of microsoft.com
+##### Allow access to `*microsoft.com`
 
 Rule name: `all-microsoft-com`
 Protocol: `Https`
