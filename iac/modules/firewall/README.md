@@ -3,7 +3,8 @@
 ## Contents
 
 - [Network Rule Collections](#network-rule-collections)
-- [Application Rule Collections](#application-rule-collections)
+- [Application Rule Collections Allow](#application-rule-collections-allow)
+- [Application Rule Collections Deny](#application-rule-collections-deny)
 
 ## Network Rule Collections
 
