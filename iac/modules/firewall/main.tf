@@ -62,6 +62,57 @@ resource "azurerm_firewall_application_rule_collection" "appRuleCollectionAllow"
   priority            = 110
 
   rule {
+    name             = "allow-akstags"
+    source_addresses = var.aksSubnetAddressPrefixes
+    fqdn_tags        = ["AzureKubernetesService"]
+  }
+
+  rule {
+    name             = "allow-microsoftservices"
+    source_addresses = var.aksSubnetAddressPrefixes
+    protocol {
+      port = 443
+      type = "Https"
+    }
+    target_fqdns = [
+      "login.microsoftonline.com",    # Required for Microsoft Entra authentication.
+      "acs-mirror.azureedge.net",     # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
+      "packages.microsoft.com",       # This address is the Microsoft packages repository used for cached apt-get operations
+      "dc.services.visualstudio.com", # This endpoint is used by Azure Monitor for Containers Agent Telemetry.
+      "management.azure.com",         # Required for Kubernetes operations against the Azure API.
+      "mcr.microsoft.com",            # Required to access images in Microsoft Container Registry (MCR)
+      "*.monitoring.azure.com"        # This endpoint is used to send metrics data to Azure Monitor
+    ]
+  }
+
+  rule {
+    name             = "allow-microsoftblob"
+    source_addresses = var.aksSubnetAddressPrefixes
+    protocol {
+      port = 443
+      type = "Https"
+    }
+    target_fqdns = [
+      "*.blob.storage.azure.net", # This dependency is due to some internal mechanisms of Azure Managed Disks
+      "*.blob.core.windows.net",  # This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions.
+    ]
+  }
+
+  rule {
+    name             = "allow-docker"
+    source_addresses = var.aksSubnetAddressPrefixes
+    protocol {
+      port = 443
+      type = "Https"
+    }
+    target_fqdns = [
+      "*docker.io",                       # This address is for authentication to docker hub and pulling image from Docker repository
+      "registry-1.docker.io",             # This address is for pulling docker image from Docker repository
+      "production.cloudflare.docker.com", # This address is for pulling docker image from Docker repository
+    ]
+  }
+
+  rule {
     name             = "allow-microsoftcom"
     source_addresses = var.aksSubnetAddressPrefixes
 
@@ -86,45 +137,6 @@ resource "azurerm_firewall_application_rule_collection" "appRuleCollectionAllow"
       "ghcr.io",
       "pkg-containers.githubusercontent.com"
     ]
-  }
-
-  rule {
-    name             = "allow-microsoftservices"
-    source_addresses = var.aksSubnetAddressPrefixes
-    protocol {
-      port = 443
-      type = "Https"
-    }
-    target_fqdns = [
-      "management.azure.com",         # Required for Kubernetes operations against the Azure API.
-      "login.microsoftonline.com",    # Required for Microsoft Entra authentication.
-      "packages.microsoft.com",       # This address is the Microsoft packages repository used for cached apt-get operations
-      "acs-mirror.azureedge.net",     # This address is for the repository required to download and install required binaries like kubenet and Azure CNI.
-      "mcr.microsoft.com",            # Required to access images in Microsoft Container Registry (MCR)
-      "dc.services.visualstudio.com", # This endpoint is used by Azure Monitor for Containers Agent Telemetry.
-      "*.blob.storage.azure.net",     # This dependency is due to some internal mechanisms of Azure Managed Disks
-      "*.blob.core.windows.net",      # This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions.
-    ]
-  }
-
-  rule {
-    name             = "allow-docker"
-    source_addresses = var.aksSubnetAddressPrefixes
-    protocol {
-      port = 443
-      type = "Https"
-    }
-    target_fqdns = [
-      "*docker.io",                       # This address is for authentication to docker hub and pulling image from Docker repository
-      "registry-1.docker.io",             # This address is for pulling docker image from Docker repository
-      "production.cloudflare.docker.com", # This address is for pulling docker image from Docker repository
-    ]
-  }
-
-  rule {
-    name             = "allow-akstags"
-    source_addresses = var.aksSubnetAddressPrefixes
-    fqdn_tags        = ["AzureKubernetesService"]
   }
 }
 

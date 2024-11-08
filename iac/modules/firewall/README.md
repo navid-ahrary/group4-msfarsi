@@ -14,17 +14,17 @@ Create a network collection rule and __Allow__ these FQDN Address:
 | TCP      | `AzureCloud.<cluster-region-name>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server.      |
 | UDP      | `AzureCloud.<cluster-region-name>` | `1194`            | Interaction between AKS node and Cluster API Server.      |
 
-## Application Rule Collections
+## Application Rule Collections Allow
 
 Create an application collection rule and __Allow__ :
 
-| Name                              | Protocol  | Priority    |
-|-----------------------------------|-----------|-------------|
-| `<firewall-name>-AppRuleCollection`  |  `Https`   | `110`        |
+| Name                                 | Protocol  | Priority    |
+|--------------------------------------|-----------|-------------|
+| `<firewall-name>-AppRuleCollectionAllow`  |  `Https`  | `110`       |
 
-### Rules
+### Allowed Rules
 
-Name: `allow-logservices`
+Name: `allow-microsoftservices`
 
 | Destination FQDN Address         |Description                   |
 |----------------------------------|------------------------------|
@@ -32,13 +32,11 @@ Name: `allow-logservices`
 | `acs-mirror.azureedge.net`            | Repository required to download and install binaries like kubenet and Azure CNI. |
 | `packages.microsoft.com`              | Microsoft packages repository used for cached apt-get operations. |
 | `dc.services.visualstudio.com`            | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
-| `*.ods.opinsights.azure.com`            | This endpoint is used by Azure Monitor for ingesting log analytics data. |
-| `*.oms.opinsights.azure.com`            | This endpoint is used by omsagent, which is used to authenticate the log analytics service. |
-| `*.monitoring.azure.com`                | This endpoint is used to send metrics data to Azure Monitor. |
-| `<cluster-region-name>.ingest.monitor.azure.com` | This endpoint is used by Azure Monitor managed service for Prometheus metrics ingestion. |
-| `<cluster-region-name>.handler.control.monitor.azure.com`  | This endpoint is used to fetch data collection rules for a specific cluster. |
+| `management.azure.com`            | Required for Kubernetes operations against the Azure API. |
 | `mcr.microsoft.com`           | Required to access images in Microsoft Container Registry (MCR)       |
-| `dc.services.visualstudio.com`                           | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
+| `*.monitoring.azure.com`                | This endpoint is used to send metrics data to Azure Monitor. |
+
+Name: `allow-microsoftblob`
 
 | Destination FQDN Address   |Description                   |
 |----------------------------|------------------------------|
@@ -50,5 +48,29 @@ Name: `allow-logservices`
 | `*docker.io`                       | For pulling Docker images from the Docker repository. |
 | `production.cloudflare.docker.com` | For pulling Docker images from the Docker repository. |
 | `registry-1.docker.io`             | For pulling Docker images from the Docker repository. |
-| `<cluster-region-name>.ingest.monitor.azure.com` | This endpoint is used by Azure Monitor managed service for Prometheus metrics ingestion. |
-| `<cluster-region-name>.handler.control.monitor.azure.com`  | This endpoint is used to fetch data collection rules for a specific cluster. |
+
+Name: `allow-microsoftcom`
+
+_This rules are specified for firewall rule testing._
+
+| Destination FQDN Address           |Description          |
+|------------------------------------|---------------------|
+| `*microsoft.com`                   | For web app access. |
+
+## Application Rule Collections Deny
+
+_This rules are specified for firewall rule testing._
+
+Create an application collection rule and __Deny__ :
+
+| Name                                     | Protocol  | Priority    |
+|------------------------------------------|-----------|-------------|
+| `<firewall-name>-AppRuleCollectionDeny`  |  `Https`  | `105`       |
+
+### Denied Rules
+
+Name: `deny-learnmicrosoftcom`
+
+| Destination FQDN Address         |Description                   |
+|----------------------------------|------------------------------|
+| `learn.microsoft.com`           | Required for Microsoft Entra authentication. |
