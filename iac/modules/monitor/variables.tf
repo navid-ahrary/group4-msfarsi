@@ -8,7 +8,7 @@ variable "location" {
   description = "Resource location"
 }
 
-variable "name" {
+variable "logName" {
   type        = string
   description = "Log Workspace name"
 }
