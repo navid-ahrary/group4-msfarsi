@@ -1,77 +1,136 @@
-# Azure Firewall
+# Azure Firewall Policy Configuration
+
+Needed Firewall Policy rules for our scenario in order to AKS works well.
 
 ## Contents
 
-- [Network Rule Collections](#network-rule-collections)
-- [Application Rule Collections Allow](#application-rule-collections-allow)
-- [Application Rule Collections Deny](#application-rule-collections-deny)
+- [NAT Policy Rule Collection Group](#nat-policy-rule-collection-group)
+  - [Nat Rule Collection](#nat-rule-collection)
+    - [Rules](#rules)
+- [Application Rule Collection Group for allow](#application-rule-collection-group-for-allow)
+- [Application Rule Collection Group for deny](#application-rule-collection-for-deny)
 
-## Network Rule Collections
+## NAT Policy Rule Collection Group
 
-Create a network collection rule and __Allow__ these FQDN Address:
+Create a dNAT rules to route inboud traffic to AKS internal load balancer.
 
-| Protocol | Destination Address | Destination Ports | Description |
-|----------|----------------------|-------------------|-------------|
-| TCP      | `AzureCloud.<cluster-region-name>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server.      |
-| UDP      | `AzureCloud.<cluster-region-name>` | `1194`            | Interaction between AKS node and Cluster API Server.      |
+Priority: `200`
 
-## Application Rule Collections Allow
+### Nat Rule Collection
 
-Create an application collection rule and __Allow__ :
+| Nat Rule Collection name           | Action  | Priority     |
+|------------------------------------|---------|------------|
+| `dnat`                             |  `dnat`  | `200`       |
 
-| Name                                 | Protocol  | Priority    |
-|--------------------------------------|-----------|-------------|
-| `<firewall-name>-AppRuleCollectionAllow`  |  `Https`  | `110`       |
+### Rules
 
-### Allowed Rules
+| Rule name | protocols | source_addresses | destination_address  | destination_ports | translated_address | translated_port |
+|----------|---------------|----------|--------|-----------|------------|------------|
+| `nat-aks-ilb`  | `TCP`, `UDP`  | `*`  | `<fw-public-ip>` | `<fw-public-port>` | `<aks-ilb-private-ip>`   | `aks-ilb-port`  |
 
-Name: `allow-microsoftservices`
+## Application Rule Collection Group for allow
 
-| Destination FQDN Address         |Description                   |
-|----------------------------------|------------------------------|
-| `login.microsoftonline.com`           | Required for Microsoft Entra authentication. |
-| `acs-mirror.azureedge.net`            | Repository required to download and install binaries like kubenet and Azure CNI. |
-| `packages.microsoft.com`              | Microsoft packages repository used for cached apt-get operations. |
-| `dc.services.visualstudio.com`            | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
-| `management.azure.com`            | Required for Kubernetes operations against the Azure API. |
-| `mcr.microsoft.com`           | Required to access images in Microsoft Container Registry (MCR)       |
-| `*.monitoring.azure.com`                | This endpoint is used to send metrics data to Azure Monitor. |
+Create an application rules collection group to control egress traffic from vnet. It includes two `application_rule_collection`s.
 
-Name: `allow-microsoftblob`
+Priority: `200`
 
-| Destination FQDN Address   |Description                   |
-|----------------------------|------------------------------|
+Create two app rule collections, one for __Allow__, another one for __Deny__ accesses.
+
+### Allow Application Rule Collections
+
+| Application Rule Collection name   | Action  | Priority     |
+|------------------------------------|---------|------------|
+| `allow-app-rule-collection`        |  `Allow`  | `200`       |
+
+#### Application Allow Rules
+
+##### Allow access to Microsoft services
+
+Rule name: `microsoft-services`
+Protocol: `Https`
+Port: `443`
+
+| FQDN Destination                   | Description         |
+|------------------------------------|---------------------|
+| `*.hcp.${var.location}.azmk8s.io`  | Required for Node <-> API server communication. |
+| `login.microsoftonline.com`        | Required for Microsoft Entra authentication. |
+| `acs-mirror.azureedge.net`         | This address is for the repository required to download and install required binaries like kubenet and Azure CNI.|
+| `packages.microsoft.com`           | This address is the Microsoft packages repository used for cached apt-get operations. |
+| `dc.services.visualstudio.com`     | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
+| `management.azure.com`             | Required for Kubernetes operations against the Azure API. |
+| `mcr.microsoft.com`                | Required to access images in Microsoft Container Registry (MCR). |
+| `*.monitoring.azure.com`           | This endpoint is used to send metrics data to Azure Monitor. |
 | `*.blob.storage.azure.net` | This dependency is due to some internal mechanisms of Azure Managed Disks.   |
 | `*.blob.core.windows.net`  | This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. |
 
-| Destination FQDN Address           |Description                   |
+##### Allow HTTP access to AKS nodes patch update
+
+Rule name: `node-update-http`
+Protocol: `Http`
+Port: `80`
+
+| Destination FQDN Address           | Description                   |
+|------------------------------------|------------------------------|
+| `changelogs.ubuntu.com`            | This address lets the Linux cluster nodes download the required security patches and updates. |
+| `azure.archive.ubuntu.com`         | This address lets the Linux cluster nodes download the required security patches and updates. |
+| `changelogs.ubuntu.com`             | This address lets the Linux cluster nodes download the required security patches and updates. |
+
+##### Allow HTTPS access to AKS nodes patch update
+
+Rule name: `node-update-https`
+Protocol: `Http`
+Port: `443`
+
+| Destination FQDN Address           | Description                   |
+|------------------------------------|------------------------------|
+| `snapshot.ubuntu.com`              |   This address lets the Linux cluster nodes download the required security patches and updates from ubuntu snapshot service. |
+
+##### Allow access to Docker Hub
+
+Rule name: `docker`
+Protocol: `Https`
+Port: `443`
+
+| Destination FQDN Address           | Description                   |
 |------------------------------------|------------------------------|
 | `*docker.io`                       | For pulling Docker images from the Docker repository. |
 | `production.cloudflare.docker.com` | For pulling Docker images from the Docker repository. |
 | `registry-1.docker.io`             | For pulling Docker images from the Docker repository. |
 
-Name: `allow-microsoftcom`
+##### Allow access to Github
 
-_This rules are specified for firewall rule testing._
+Rule name: `github`
+Protocol: `Https`
+Port: `443`
+
+| Destination FQDN Address           | Description                   |
+|------------------------------------|------------------------------|
+| `ghcr.io`                          | For pulling from the Github repository. |
+| `pkg-containers.githubusercontent.com` | For pulling from the Github repository. |
+
+##### Allow access to all subdomains of microsoft.com
+
+Rule name: `all-microsoft-com`
+Protocol: `Https`
+
+_This rules are specified for firewall policy rule testing._
 
 | Destination FQDN Address           |Description          |
 |------------------------------------|---------------------|
-| `*microsoft.com`                   | For web app access. |
+| `*microsoft.com`                   | Allow AKS web app to access. |
 
-## Application Rule Collections Deny
+### Deny Application Rule Collections
 
 _This rules are specified for firewall rule testing._
 
 Create an application collection rule and __Deny__ :
 
-| Name                                     | Protocol  | Priority    |
-|------------------------------------------|-----------|-------------|
-| `<firewall-name>-AppRuleCollectionDeny`  |  `Https`  | `105`       |
+#### Deny Application Allow Rules
 
-### Denied Rules
+##### Deny access rules
 
 Name: `deny-learnmicrosoftcom`
 
 | Destination FQDN Address         |Description                   |
 |----------------------------------|------------------------------|
-| `learn.microsoft.com`           | Required for Microsoft Entra authentication. |
+| `learn.microsoft.com`           | Deny AKS web app to access. |

@@ -23,7 +23,7 @@ resource "azurerm_monitor_action_group" "actionGroup" {
 
 
 resource "azurerm_monitor_scheduled_query_rules_alert" "example_firewall_alert" {
-  name                = "FirewallDeniedAppRuleAlert"
+  name                = var.alertRuleName
   resource_group_name = var.rgName
   location            = var.location
   tags                = var.commonTags

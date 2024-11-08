@@ -1,6 +1,11 @@
-output "fwpip" {
-  depends_on  = [module.firewall]
-  value       = module.firewall.fwpip
+output "fwPip" {
+  value       = module.pip.fwpPipAddress
   sensitive   = true
-  description = "Azure Firewall puplic IP served through internet"
+  description = "Azure Firewall public IP"
+}
+
+output "fwManagementPip" {
+  value       = module.pip.fwManagementPipAddress
+  sensitive   = true
+  description = "Azure Firewall Management public IP"
 }

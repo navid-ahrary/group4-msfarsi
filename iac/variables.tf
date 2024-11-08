@@ -7,7 +7,7 @@ variable "rgName" {
 variable "location" {
   type        = string
   description = "Resource group location"
-  default     = "swedencentral"
+  default     = "westus2"
 }
 
 variable "commonTags" {
@@ -52,7 +52,7 @@ variable "aksNodeVmSize" {
 variable "firewallName" {
   type        = string
   description = "Azure Firewall name"
-  default     = "fw-egress"
+  default     = "afw-egress"
 }
 
 variable "logName" {
@@ -72,13 +72,40 @@ variable "actionGroupReceiverEmailAddresses" {
   description = "List of email addresse as receiver of action group"
 }
 
+
+variable "alertRuleName" {
+  type        = string
+  description = "Log Alert Rule name"
+  default     = "apr-egress"
+}
+
 variable "authorizedIpRanges" {
   type        = list(string)
-  description = "Authorized IPs to access AKS API server"
+  description = "Authorized IP Addresses to access AKS API server"
+  default     = []
 }
 
 variable "logRetentionInDays" {
   type        = string
   default     = "30"
   description = "Data retention in days. 30 is usually the minimum allowed for basic needs."
+}
+
+variable "publicIpFwName" {
+  type        = string
+  description = "Public IP name for Firewall"
+  default     = "pip-egress-afw"
+}
+
+
+variable "publicIpFwManagementName" {
+  type        = string
+  description = "Public IP name for Firewall Management"
+  default     = "pip-egress-afw-managment"
+}
+
+variable "publicIPSku" {
+  type        = string
+  description = "Public IP sku"
+  default     = "Standard"
 }

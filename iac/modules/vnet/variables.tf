@@ -41,6 +41,12 @@ variable "firewallSubnetAddressPrefixes" {
   default     = ["10.42.2.0/26"] # Not changeable! 10.42.2.0 - 10.42.2.63 
 }
 
+variable "firewallManagementSubnetAddressPrefixes" {
+  type        = list(string)
+  description = "Firewall Management IP subnet prefix ip"
+  default     = ["10.42.3.0/26"] # Not changeable! 10.42.2.0 - 10.42.2.63 
+}
+
 variable "firewallPrivateIP" {
   type    = string
   default = "Firewall Private IP in this vnet"

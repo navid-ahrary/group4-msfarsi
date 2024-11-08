@@ -23,10 +23,30 @@ variable "fwSubnetId" {
   description = "The subnet id for hosting Firewall"
 }
 
-variable "skuTier" {
+variable "fwPipId" {
+  type        = string
+  description = "Firewall public IP"
+}
+
+variable "fwPipAddress" {
+  type        = string
+  description = "Firewall IP public address"
+}
+
+variable "fwManagementPipId" {
+  type        = string
+  description = "Firewall Management public IP"
+}
+
+variable "fwManagementSubnetId" {
+  type        = string
+  description = "The subnet id for hosting Firewall Management"
+}
+
+variable "fwSkuTier" {
   type        = string
   description = "Firewall SKU Tier"
-  default     = "Standard"
+  default     = "Basic"
 }
 
 variable "skuName" {
@@ -45,3 +65,8 @@ variable "logWorkspaceId" {
   description = "Log Analytics Workspace Id used for monitoring Firewall logs"
 }
 
+variable "fwPolicySkuTier" {
+  type        = string
+  description = "Firewall Policy SKU Tier"
+  default     = "Basic"
+}

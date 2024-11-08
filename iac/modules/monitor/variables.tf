@@ -38,3 +38,8 @@ variable "fwId" {
   type        = string
   description = "Firewall Id for alerting"
 }
+
+variable "alertRuleName" {
+  type        = string
+  description = "Alert Rule name"
+}
