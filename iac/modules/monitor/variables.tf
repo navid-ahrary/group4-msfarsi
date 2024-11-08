@@ -23,3 +23,18 @@ variable "logRetentionInDays" {
   default     = "30"
   description = "Data retention in days. 30 is usually the minimum allowed for basic needs."
 }
+
+variable "actionGroupName" {
+  type        = string
+  description = "Action group name"
+}
+
+variable "receiverEmailAddresses" {
+  type        = list(string)
+  description = "List of email addresses of alert receiver"
+}
+
+variable "fwId" {
+  type        = string
+  description = "Firewall Id for alerting"
+}

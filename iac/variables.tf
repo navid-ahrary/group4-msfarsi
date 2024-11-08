@@ -61,6 +61,17 @@ variable "logName" {
   default     = "log-egress"
 }
 
+variable "actionGroupName" {
+  type        = string
+  description = "Action group name"
+  default     = "ag-egress"
+}
+
+variable "actionGroupReceiverEmailAddresses" {
+  type        = list(string)
+  description = "List of email addresse as receiver of action group"
+}
+
 variable "authorizedIpRanges" {
   type        = list(string)
   description = "Authorized IPs to access AKS API server"

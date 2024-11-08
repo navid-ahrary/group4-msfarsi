@@ -61,6 +61,10 @@ module "monitor" {
   commonTags         = var.commonTags
   location           = var.location
   rgName             = var.rgName
-  name               = "${var.logName}-${random_string.prefix.result}"
+  logName            = "${var.logName}-${random_string.prefix.result}"
   logRetentionInDays = var.logRetentionInDays
+
+  actionGroupName        = "${var.actionGroupName}-${random_string.prefix.result}"
+  receiverEmailAddresses = var.actionGroupReceiverEmailAddresses
+  fwId                   = module.firewall.fwId
 }
