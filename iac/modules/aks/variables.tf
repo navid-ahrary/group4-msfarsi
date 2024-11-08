@@ -4,19 +4,19 @@ variable "rgName" {
   description = "Resource group name"
 }
 
+variable "name" {
+  type        = string
+  description = "Azure Kubernetes Service name"
+}
+
 variable "location" {
   type        = string
-  description = "Resource group location"
+  description = "Resource location"
 }
 
 variable "commonTags" {
   type        = map(string)
-  description = "Resource group tags"
-}
-
-variable "aksName" {
-  type        = string
-  description = "Azure Kubernetes Service name"
+  description = "Resource tags"
 }
 
 variable "aksSubnetId" {

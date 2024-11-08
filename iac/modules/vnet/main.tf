@@ -1,5 +1,5 @@
 resource "azurerm_virtual_network" "vnet" {
-  name     = var.vnetName
+  name     = var.name
   location = var.location
   tags     = var.commonTags
 

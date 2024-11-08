@@ -5,20 +5,21 @@ variable "rgName" {
 
 variable "location" {
   type        = string
-  description = "Resource group location"
+  description = "Resource location"
 }
 
-variable "commonTags" {
-  type        = map(string)
-  description = "Resource group tags"
-}
-
-variable "logName" {
+variable "name" {
   type        = string
   description = "Log Workspace name"
 }
 
-variable "fwId" {
+variable "commonTags" {
+  type        = map(string)
+  description = "Resource tags"
+}
+
+variable "logRetentionInDays" {
   type        = string
-  description = "Firewall service id to enable diagnostic settings"
+  default     = "30"
+  description = "Data retention in days. 30 is usually the minimum allowed for basic needs."
 }

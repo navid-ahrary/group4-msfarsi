@@ -1,7 +1,6 @@
-
-variable "vnetName" {
+variable "name" {
   type        = string
-  description = "Virtual network name"
+  description = "Resource name"
 }
 
 variable "location" {
@@ -27,19 +26,19 @@ variable "aksSubnetName" {
 variable "addressSpaces" {
   type        = list(string)
   description = "VNet address spaces"
-  default     = ["10.0.0.0/23"] # 10.0.0.0 - 10.0.1.255 (512 available IPs)
-}
-
-variable "firewallSubnetAddressPrefixes" {
-  type        = list(string)
-  description = "Firewall subnet prefix ip"
-  default     = ["10.0.1.0/26"] # Not changeable! 10.0.1.0 - 10.0.1.64 
+  default     = ["10.42.0.0/16"] # 10.42.0.0 - 10.42.255.255 (65,536 available IPs)
 }
 
 variable "aksSubnetAddressPrefixes" {
   type        = list(string)
   description = "AKS subnet prefix ip"
-  default     = ["10.0.0.0/24"] # 10.0.0.0 - 10.0.0.255 : 256 ip addresses
+  default     = ["10.42.1.0/24"] # 10.0.0.0 - 10.0.0.255 : 256 ip addresses
+}
+
+variable "firewallSubnetAddressPrefixes" {
+  type        = list(string)
+  description = "Firewall subnet prefix ip"
+  default     = ["10.42.2.0/26"] # Not changeable! 10.42.2.0 - 10.42.2.63 
 }
 
 variable "firewallPrivateIP" {

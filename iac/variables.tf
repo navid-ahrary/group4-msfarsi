@@ -64,5 +64,10 @@ variable "logName" {
 variable "authorizedIpRanges" {
   type        = list(string)
   description = "Authorized IPs to access AKS API server"
-  default     = ["20.216.218.128/32"]
+}
+
+variable "logRetentionInDays" {
+  type        = string
+  default     = "30"
+  description = "Data retention in days. 30 is usually the minimum allowed for basic needs."
 }

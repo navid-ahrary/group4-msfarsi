@@ -4,7 +4,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name     = var.aksName
+  name     = var.name
   location = var.location
   tags     = var.commonTags
 
@@ -33,7 +33,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  dns_prefix = "${var.aksName}-dns"
+  dns_prefix = "${var.name}-dns"
   network_profile {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"

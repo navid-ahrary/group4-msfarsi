@@ -1,3 +1,10 @@
+resource "random_string" "prefix" {
+  length  = 6
+  special = false
+  upper   = false
+  numeric = true
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = var.rgName
   location = var.location
@@ -8,7 +15,7 @@ module "vnet" {
   commonTags        = var.commonTags
   location          = var.location
   rgName            = var.rgName
-  vnetName          = var.vnetName
+  name              = "${var.vnetName}-${random_string.prefix.result}"
   aksSubnetName     = var.aksSubnetName
   firewallPrivateIP = module.firewall.privateIp
 }
@@ -16,16 +23,17 @@ module "vnet" {
 module "firewall" {
   source                   = "./modules/firewall"
   commonTags               = var.commonTags
-  fwName                   = var.firewallName
+  name                     = "${var.firewallName}-${random_string.prefix.result}"
   fwSubnetId               = module.vnet.fwSubnetId
   rgName                   = var.rgName
   location                 = var.location
   aksSubnetAddressPrefixes = module.vnet.aksSubnetAddressPrefixes
+  logWorkspaceId           = module.monitor.logWorkspaceId
 }
 
 module "aks" {
   source             = "./modules/aks"
-  aksName            = var.aksName
+  name               = "${var.aksName}-${random_string.prefix.result}"
   rgName             = var.rgName
   aksSubnetId        = module.vnet.aksSubnetId
   commonTags         = var.commonTags
@@ -41,7 +49,7 @@ module "routeTable" {
   commonTags        = var.commonTags
   location          = var.location
   rgName            = var.rgName
-  routeTableName    = var.routeTableName
+  name              = "${var.routeTableName}-${random_string.prefix.result}"
   vnetAddressSpaces = module.vnet.vnetAddressSpace
   fwpip             = module.firewall.fwpip
   fwPrivateIp       = module.firewall.privateIp
@@ -49,10 +57,10 @@ module "routeTable" {
 }
 
 module "monitor" {
-  source     = "./modules/monitor"
-  commonTags = var.commonTags
-  location   = var.location
-  rgName     = var.rgName
-  fwId       = module.firewall.fwId
-  logName    = var.logName
+  source             = "./modules/monitor"
+  commonTags         = var.commonTags
+  location           = var.location
+  rgName             = var.rgName
+  name               = "${var.logName}-${random_string.prefix.result}"
+  logRetentionInDays = var.logRetentionInDays
 }

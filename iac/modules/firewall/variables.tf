@@ -8,14 +8,14 @@ variable "location" {
   description = "Azure Firewall location"
 }
 
+variable "name" {
+  type        = string
+  description = "Azure Firewall Service name"
+}
+
 variable "commonTags" {
   type        = map(string)
   description = "Azure Firewall tags"
-}
-
-variable "fwName" {
-  type        = string
-  description = "Azure Firewall Service name"
 }
 
 variable "fwSubnetId" {
@@ -38,5 +38,10 @@ variable "skuName" {
 variable "aksSubnetAddressPrefixes" {
   type        = list(string)
   description = "AKS subnet address prefixes"
+}
+
+variable "logWorkspaceId" {
+  type        = string
+  description = "Log Analytics Workspace Id used for monitoring Firewall logs"
 }
 

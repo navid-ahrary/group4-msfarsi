@@ -2,30 +2,34 @@
 
 ## Contents
 
-- [Network Rules](#network-rules)
-- [Application Rules](#application-rules)
+- [Network Rule Collections](#network-rule-collections)
+- [Application Rule Collections](#application-rule-collections)
 
-## Network Rules
+## Network Rule Collections
 
 Create a network collection rule and __Allow__ these FQDN Address:
 
-| Protocol | Destination FQDN Address | Destination Ports | Description |
+| Protocol | Destination Address | Destination Ports | Description |
 |----------|----------------------|-------------------|-------------|
-| TCP      | `<cluster-api-server-address>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server.      |
-| UDP      | `<cluster-api-server-address>` | `1194`            | Interaction between AKS node and Cluster API Server.      |
-| TCP       | _ServiceTag_ `AzureMonitor` | `443` | This endpoint is used to send metrics data and logs to Azure Monitor and Log Analytics. |
+| TCP      | `AzureCloud.<cluster-region-name>` | `9000`, `443`     | Interaction between AKS node and Cluster API Server.      |
+| UDP      | `AzureCloud.<cluster-region-name>` | `1194`            | Interaction between AKS node and Cluster API Server.      |
 
-## Application Rules
+## Application Rule Collections
 
-Create an application collection rule and __Allow__ `Https` to this destination.
+Create an application collection rule and __Allow__ :
+
+| Name                              | Protocol  | Priority    |
+|-----------------------------------|-----------|-------------|
+| `<firewall-name>-AppRuleCollection`  |  `Https`   | `110`        |
+
+### Rules
+
+Name: `allow-logservices`
 
 | Destination FQDN Address         |Description                   |
 |----------------------------------|------------------------------|
-| `*.hcp.<cluster-region-name>.azmk8s.io`       | Required for Node <-> API server communication. Not required for private clusters. |
-| `management.azure.com`                | Required for Kubernetes operations against the Azure API. |
 | `login.microsoftonline.com`           | Required for Microsoft Entra authentication. |
 | `acs-mirror.azureedge.net`            | Repository required to download and install binaries like kubenet and Azure CNI. |
-| `docker.io`, `production.cloudflare.docker.com`, `registry-1.docker.io`   | For pulling Docker images from the Docker repository. |
 | `packages.microsoft.com`              | Microsoft packages repository used for cached apt-get operations. |
 | `dc.services.visualstudio.com`            | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
 | `*.ods.opinsights.azure.com`            | This endpoint is used by Azure Monitor for ingesting log analytics data. |
@@ -35,5 +39,16 @@ Create an application collection rule and __Allow__ `Https` to this destination.
 | `<cluster-region-name>.handler.control.monitor.azure.com`  | This endpoint is used to fetch data collection rules for a specific cluster. |
 | `mcr.microsoft.com`           | Required to access images in Microsoft Container Registry (MCR)       |
 | `dc.services.visualstudio.com`                           | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
+
+| Destination FQDN Address   |Description                   |
+|----------------------------|------------------------------|
 | `*.blob.storage.azure.net` | This dependency is due to some internal mechanisms of Azure Managed Disks.   |
-| `*.blob.core.windows.net` | This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. |
+| `*.blob.core.windows.net`  | This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. |
+
+| Destination FQDN Address           |Description                   |
+|------------------------------------|------------------------------|
+| `*docker.io`                       | For pulling Docker images from the Docker repository. |
+| `production.cloudflare.docker.com` | For pulling Docker images from the Docker repository. |
+| `registry-1.docker.io`             | For pulling Docker images from the Docker repository. |
+| `<cluster-region-name>.ingest.monitor.azure.com` | This endpoint is used by Azure Monitor managed service for Prometheus metrics ingestion. |
+| `<cluster-region-name>.handler.control.monitor.azure.com`  | This endpoint is used to fetch data collection rules for a specific cluster. |

@@ -13,6 +13,11 @@ variable "rgName" {
   description = "Resource group name"
 }
 
+variable "name" {
+  type        = string
+  description = "Route table name"
+}
+
 variable "vnetAddressSpaces" {
   type        = list(string)
   description = "VNet address spaces that route table reacts to its traffic"
@@ -29,10 +34,6 @@ variable "aksSubnetId" {
   description = "Subnet id that is associated to the route table"
 }
 
-variable "routeTableName" {
-  type        = string
-  description = "Route table name"
-}
 
 variable "fwPrivateIp" {
   type        = string

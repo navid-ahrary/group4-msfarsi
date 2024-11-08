@@ -1,6 +1,5 @@
 resource "azurerm_route_table" "rt" {
-  name = var.routeTableName
-
+  name                = var.name
   resource_group_name = var.rgName
   location            = var.location
   tags                = var.commonTags

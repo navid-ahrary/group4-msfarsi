@@ -16,4 +16,8 @@
 
 ### Destination table
 
-- Resource specific (`dedicated`)
+- Resource specific (`Dedicated`)
+
+## Date retention
+
+- Data retention in days. `30` is usually the minimum allowed for basic needs
