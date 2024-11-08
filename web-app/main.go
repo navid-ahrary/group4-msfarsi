@@ -80,7 +80,7 @@ func checkHTTPWithResty(url, protocol string) (int, error) {
 	}
 	client := resty.New().SetTimeout(5 * time.Second)
 
-	resp, err := client.R().Head(fullURL)
+	resp, err := client.R().Get(fullURL)
 	if err != nil {
 		return http.StatusForbidden, err
 	}

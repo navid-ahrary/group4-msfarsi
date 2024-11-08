@@ -1,23 +1,23 @@
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: group4-app
+    name: msfarsi-group4-app
     namespace: default
   spec:
     replicas: 1
     selector:
       matchLabels:
-        app: group4-app
+        app: msfarsi-group4-app
     template:
       metadata:
         labels:
-          app: group4-app
+          app: msfarsi-group4-app
       spec:
         nodeSelector:
           kubernetes.io/os: linux
         containers:
-          - name: group4-app
-            image: navidahrary/front:latest
+          - name: msfarsi-group4-app
+            image: navidahrary/msfarsi-group4-app:latest
             ports:
               - containerPort: 8080
             resources:
@@ -30,7 +30,7 @@
 - apiVersion: v1
   kind: Service
   metadata:
-    name: group4-app-ilb
+    name: msfarsi-group4-app-ilb
     namespace: default
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
@@ -41,4 +41,4 @@
       - port: 80
         targetPort: 8080
     selector:
-      app: group4-app
+      app: msfarsi-group4-app
