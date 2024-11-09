@@ -85,7 +85,7 @@ Port: `80`
 ##### Allow HTTPS access to AKS nodes patch update
 
 Rule name: `node-update-https`
-Protocol: `Http`
+Protocol: `Https`
 Port: `443`
 
 | Destination FQDN Address           | Description                   |
