@@ -59,7 +59,7 @@ Port: `443`
 
 | FQDN Destination                   | Description         |
 |------------------------------------|---------------------|
-| `*.hcp.${var.location}.azmk8s.io`  | Required for Node <-> API server communication. |
+| `*.hcp.<aks-cluster-location>.azmk8s.io`  | Required for Node <-> API server communication. |
 | `login.microsoftonline.com`        | Required for Microsoft Entra authentication. |
 | `acs-mirror.azureedge.net`         | This address is for the repository required to download and install required binaries like kubenet and Azure CNI.|
 | `packages.microsoft.com`           | This address is the Microsoft packages repository used for cached apt-get operations. |
