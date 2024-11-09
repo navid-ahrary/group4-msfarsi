@@ -132,7 +132,12 @@ _This rules are specified for firewall rule testing._
 
 Create an application collection rule and __Deny__ :
 
-#### Deny Application Allow Rules
+
+| Application Rule Collection name   | Action  | Priority     |
+|------------------------------------|---------|------------|
+| `deny-app-rule-collection`        |  `Deny`  | `150`       |
+
+#### Deny Application Rules
 
 ##### Deny access rules
 
