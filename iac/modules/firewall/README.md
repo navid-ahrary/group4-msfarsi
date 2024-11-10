@@ -88,7 +88,7 @@ Rule name: `node-update-https`
 Protocol: `Https`
 Port: `443`
 
-| Destination FQDN Address           | Description                   |
+| Destination FQDN Address           | Description                  |
 |------------------------------------|------------------------------|
 | `snapshot.ubuntu.com`              |   This address lets the Linux cluster nodes download the required security patches and updates from ubuntu snapshot service. |
 
@@ -98,8 +98,8 @@ Rule name: `docker`
 Protocol: `Https`
 Port: `443`
 
-| Destination FQDN Address           | Description                   |
-|------------------------------------|------------------------------|
+| Destination FQDN Address           | Description                                           |
+|------------------------------------|-------------------------------------------------------|
 | `*docker.io`                       | For pulling Docker images from the Docker repository. |
 | `production.cloudflare.docker.com` | For pulling Docker images from the Docker repository. |
 | `registry-1.docker.io`             | For pulling Docker images from the Docker repository. |
@@ -110,9 +110,9 @@ Rule name: `github`
 Protocol: `Https`
 Port: `443`
 
-| Destination FQDN Address           | Description                   |
-|------------------------------------|------------------------------|
-| `ghcr.io`                          | For pulling from the Github repository. |
+| Destination FQDN Address               | Description                             |
+|----------------------------------------|-----------------------------------------|
+| `ghcr.io`                              | For pulling from the Github repository. |
 | `pkg-containers.githubusercontent.com` | For pulling from the Github repository. |
 
 ##### Allow access to `*microsoft.com`
@@ -132,10 +132,9 @@ _This rules are specified for firewall rule testing._
 
 Create an application collection rule and __Deny__ :
 
-
-| Application Rule Collection name   | Action  | Priority     |
+| Application Rule Collection name   | Action  | Priority   |
 |------------------------------------|---------|------------|
-| `deny-app-rule-collection`        |  `Deny`  | `150`       |
+| `deny-app-rule-collection`         |  `Deny` | `150`      |
 
 #### Deny Application Rules
 
@@ -145,4 +144,4 @@ Name: `deny-learnmicrosoftcom`
 
 | Destination FQDN Address         |Description                   |
 |----------------------------------|------------------------------|
-| `learn.microsoft.com`           | Deny AKS web app to access. |
+| `learn.microsoft.com`            | Deny AKS web app to access.  |
