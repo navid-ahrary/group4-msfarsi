@@ -69,7 +69,7 @@ variable "actionGroupName" {
 
 variable "actionGroupReceiverEmailAddresses" {
   type        = list(string)
-  description = "List of email addresse as receiver of action group"
+  description = "List of email addresses as receivers of action group"
 }
 
 
@@ -88,7 +88,7 @@ variable "authorizedIpRanges" {
 variable "logRetentionInDays" {
   type        = string
   default     = "30"
-  description = "Data retention in days. 30 is usually the minimum allowed for basic needs."
+  description = "Data retention in days. 30 is usually the minimum allowed for basic needs"
 }
 
 variable "publicIpFwName" {
@@ -101,7 +101,7 @@ variable "publicIpFwName" {
 variable "publicIpFwManagementName" {
   type        = string
   description = "Public IP name for Firewall Management"
-  default     = "pip-egress-afw-managment"
+  default     = "pip-egress-afw-management"
 }
 
 variable "publicIPSku" {
