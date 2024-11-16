@@ -6,7 +6,7 @@ variable "rgName" {
 
 variable "location" {
   type        = string
-  description = "Resource group location"
+  description = "Resource location"
   default     = "westus2"
 }
 
