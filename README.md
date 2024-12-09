@@ -10,8 +10,8 @@
 
 ### Solution Diagram
 
-!["diagram"](./assets/solution-diagram.webp)
-<!-- !["diagram"](./assets/AKS-Group4-MSFarsi-3.png) -->
+<!-- !["diagram"](./assets/solution-diagram.webp) -->
+!["diagram"](./assets/AKS-Group4-MSFarsi-3.png)
 
 ### Scenario
 
